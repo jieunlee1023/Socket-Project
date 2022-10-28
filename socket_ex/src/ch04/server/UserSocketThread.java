@@ -12,7 +12,7 @@ public class UserSocketThread extends Thread {
 	// 클라이언트와 연결 스트림 처리
 	// 동작 --> 동작을 해야하므로 Thread 처리해야함
 
-	int id;
+	String id;
 	private boolean isRun = true;
 
 	// 의존성 컴포지션 관계
@@ -24,7 +24,7 @@ public class UserSocketThread extends Thread {
 	BufferedReader bufferedReader;
 	BufferedWriter bufferedWriter;
 
-	public UserSocketThread(int id, Socket socket, ServerFile mContext) {
+	public UserSocketThread(String id, Socket socket, ServerFile mContext) {
 		this.id = id;
 		this.socket = socket;
 		this.mContext = mContext;

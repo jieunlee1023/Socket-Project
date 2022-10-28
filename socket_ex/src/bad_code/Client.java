@@ -1,4 +1,4 @@
-package badcode;
+package bad_code;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -58,8 +58,8 @@ public class Client extends JFrame implements ActionListener {
 	private DataOutputStream dos;
 
 	// 그외 변수들
-	private Vector<String> user_Vclist = new Vector<String>();
-	private Vector<String> roomList_vc = new Vector<String>();
+	private Vector<String> userList = new Vector<String>();
+	private Vector<String> roomList = new Vector<String>();
 	private StringTokenizer st;
 	private String my_roomName;
 
@@ -207,6 +207,7 @@ public class Client extends JFrame implements ActionListener {
 	}
 
 	private void connectServer() {
+
 		try {
 			// 서버에 접속합니다.
 			socket = new Socket(ip, port);
@@ -230,8 +231,8 @@ public class Client extends JFrame implements ActionListener {
 			sendmessage(user_id);
 
 			// 벡터에 유저의 id 를 저장하고 리스트 화면에 추가시켜준다.
-			user_Vclist.add(user_id);
-			totalList_lst.setListData(user_Vclist);
+			userList.add(user_id);
+			totalList_lst.setListData(userList);
 
 			Thread cth = new Thread(new Runnable() {
 				@Override
@@ -243,10 +244,10 @@ public class Client extends JFrame implements ActionListener {
 							inmessage(msg);
 						} catch (IOException e) {
 							try {
-								user_Vclist.removeAll(user_Vclist);
-								roomList_vc.removeAll(roomList_vc);
-								totalList_lst.setListData(user_Vclist);
-								roomList_lst.setListData(roomList_vc);
+								userList.removeAll(userList);
+								roomList.removeAll(roomList);
+								totalList_lst.setListData(userList);
+								roomList_lst.setListData(roomList);
 								viewChat_ta.setText("\n");
 								is.close();
 								os.close();
@@ -280,11 +281,11 @@ public class Client extends JFrame implements ActionListener {
 		System.out.println("메세지" + message);
 
 		if (protocol.equals("NewUser")) {
-			user_Vclist.add(message);
-			totalList_lst.setListData(user_Vclist);
+			userList.add(message);
+			totalList_lst.setListData(userList);
 		} else if (protocol.equals("OldUser")) {
-			user_Vclist.add(message);
-			totalList_lst.setListData(user_Vclist);
+			userList.add(message);
+			totalList_lst.setListData(userList);
 		} else if (protocol.equals("Note")) {
 			st = new StringTokenizer(message, "@");
 			String user = st.nextToken();
@@ -299,35 +300,35 @@ public class Client extends JFrame implements ActionListener {
 		} else if (protocol.equals("CreateRoomFail")) {
 			JOptionPane.showMessageDialog(null, "같은 방 이름이 존재합니다.!", "알림", JOptionPane.ERROR_MESSAGE);
 		} else if (protocol.equals("new_Room")) {
-			roomList_vc.add(message);
-			roomList_lst.setListData(roomList_vc);
+			roomList.add(message);
+			roomList_lst.setListData(roomList);
 		} else if (protocol.equals("Chatting")) {
 			String msg = st.nextToken();
 			viewChat_ta.append(message + " : " + msg + "\n");
 		} else if (protocol.equals("OldRoom")) {
-			roomList_vc.add(message);
-			roomList_lst.setListData(roomList_vc);
+			roomList.add(message);
+			roomList_lst.setListData(roomList);
 		} else if (protocol.equals("JoinRoom")) {
 			my_roomName = message;
-			JOptionPane.showMessageDialog(null, "채팅방 (  " + my_roomName + " ) 에 입장완료", "알림",
+			JOptionPane.showMessageDialog
+			(null, "채팅방 (  " + my_roomName + " ) 에 입장완료", "알림",
 					JOptionPane.INFORMATION_MESSAGE);
 			viewChat_ta.setText("");
 		} else if (protocol.equals("UserOut")) {
-			user_Vclist.remove(message);
+			userList.remove(message);
 			sendmessage("OutRoom/" + my_roomName);
 		} else if (protocol.equals("UserData_Updata")) {
-			totalList_lst.setListData(user_Vclist);
-			roomList_lst.setListData(roomList_vc);
+			totalList_lst.setListData(userList);
+			roomList_lst.setListData(roomList);
 		} else if (protocol.equals("OutRoom")) {
 			viewChat_ta.append("*** (( " + my_roomName + "에서 퇴장 ))***\n");
-			my_roomName = null;
-			btn_makeRoom.setEnabled(true);
-			btn_outRoom.setEnabled(false);
+			//my_roomName = null;
 		} else if (protocol.equals("EmptyRoom")) {
-			roomList_vc.remove(message);
-			// 클라이언트가 강제 종료 되었고 방이 비었을때 방 목록에서 그 방을 없애준다.
+			roomList.remove(message);
+			// 클라이언트가 강제 종료 되었고 
+			//방이 비었을때 방 목록에서 그 방을 없애준다.
 		} else if (protocol.equals("ErrorOutRoom")) {
-			roomList_vc.remove(message);
+			roomList.remove(message);
 		}
 	}
 
@@ -390,13 +391,13 @@ public class Client extends JFrame implements ActionListener {
 			if (note != null) {
 				sendmessage("Note/" + user + "@" + note);
 			}
-		} else if (e.getSource() == joinRomm_btn) {
+		} else if (e.getSource() == joinRomm_btn) { 
 			System.out.println("방입장버튼 클릭");
 			String joinRoom = (String) roomList_lst.getSelectedValue();
 			btn_outRoom.setEnabled(true);
 			btn_makeRoom.setEnabled(false);
 			sendmessage("JoinRoom/" + joinRoom);
-		} else if (e.getSource() == chatting_tf) {
+		} else if (e.getSource() == chatting_tf) { 
 			if (chatting_tf.getText().length() == 0) {
 				System.out.println("이게 0값으로 들어가나?");
 				sendmessage("Chatting/" + my_roomName + "/" + chatting_tf.getText() + "   ");

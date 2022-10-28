@@ -24,13 +24,14 @@ public class ServerFile {
 		try {
 			System.out.println(">>>>> 서버 시작 <<<<<");
 			serverSocket = new ServerSocket(HOST_PORT);
+			System.out.println(HOST_PORT+"로 시작");
 
 			new Thread(() -> {
 				while (true) {
 					try {
 						Socket socket = serverSocket.accept();
 						// 여기서 UserSocketThread 생성 해야 한다.
-						UserSocketThread userSocketThread = new UserSocketThread(vectors.size() + 1, socket, mContext);
+						UserSocketThread userSocketThread = new UserSocketThread("지은", socket, mContext);
 						userSocketThread.start();
 						// 벡터에 연결된 유저 정보 소켁을 담아서 관리 !
 						vectors.add(userSocketThread);

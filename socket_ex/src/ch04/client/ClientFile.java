@@ -17,6 +17,10 @@ public class ClientFile {
 	BufferedReader bufferedReader;
 	BufferedReader keyboardReader;
 
+	private String clientIp;
+	private int clientPort = 20000;
+	private String clientNickName;
+
 	boolean flag = true;
 
 	public ClientFile() {
@@ -26,7 +30,7 @@ public class ClientFile {
 	private void initData() {
 		System.out.println(" [ 클라이언트 소켓 시작 ] ");
 		try {
-			socket = new Socket(ServerFile.HOST_IP, ServerFile.HOST_PORT);
+			socket = new Socket(clientIp, clientPort);
 
 			connectSocketReaderWriter();
 			connectKeyboardReader();

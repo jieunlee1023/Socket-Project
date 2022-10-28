@@ -1,4 +1,5 @@
-package badcode;
+
+package bad_code;
 
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
@@ -38,7 +39,7 @@ public class Server extends JFrame implements ActionListener {
 	private int port;
 
 	// 그외 자원들
-	private Vector<UserInfomation> vc = new Vector<UserInfomation>();
+	private Vector<UserInfomation> userVector = new Vector<UserInfomation>();
 	private Vector<RoomInfomation> vc_room = new Vector<RoomInfomation>();
 
 	public Server() {
@@ -68,7 +69,7 @@ public class Server extends JFrame implements ActionListener {
 		lblPortNum.setBounds(12, 273, 82, 15);
 		contentPane.add(lblPortNum);
 
-		tfPort = new JTextField();
+		tfPort = new JTextField("20000");
 		tfPort.setBounds(98, 270, 224, 21);
 		contentPane.add(tfPort);
 		tfPort.setColumns(10);
@@ -112,7 +113,7 @@ public class Server extends JFrame implements ActionListener {
 		} else if (e.getSource() == btnServerStop) {
 			try {
 				server_socket.close();
-				vc.removeAllElements();
+				userVector.removeAllElements();
 				vc_room.removeAllElements();
 				tfPort.setEditable(true);
 				btnServerStart.setEnabled(true);
@@ -161,8 +162,8 @@ public class Server extends JFrame implements ActionListener {
 
 	// 전체 사용자에게 메세지를 보내는 부분
 	public void broadCast(String str) {
-		for (int i = 0; i < vc.size(); i++) {
-			UserInfomation uinf = vc.elementAt(i);
+		for (int i = 0; i < userVector.size(); i++) {
+			UserInfomation uinf = userVector.elementAt(i);
 			// 여기서 프로토콜의 개념을 사용
 			uinf.sendmessage(str);
 		}
@@ -170,26 +171,28 @@ public class Server extends JFrame implements ActionListener {
 
 	// 내부클래스
 	class UserInfomation extends Thread {
+
 		private InputStream is;
 		private OutputStream os;
 		private DataInputStream dis;
 		private DataOutputStream dos;
 		String nickName;
 		String myCurrentRoomName;
-		private Socket user_socket;
+		private Socket socket;
 
 		private boolean roomCheck = true;
 
 		public UserInfomation(Socket soc) {
-			this.user_socket = soc;
+			this.socket = soc;
 			network();
 		}
 
 		private void network() {
+
 			try {
-				is = user_socket.getInputStream();
+				is = socket.getInputStream();
 				dis = new DataInputStream(is);
-				os = user_socket.getOutputStream();
+				os = socket.getOutputStream();
 				dos = new DataOutputStream(os);
 
 				// 처음 접속시 유저의 id를 입력받는다.
@@ -200,8 +203,8 @@ public class Server extends JFrame implements ActionListener {
 				broadCast("NewUser/" + nickName);
 
 				// 자신에게 기존 사용자들을 알린다.
-				for (int i = 0; i < vc.size(); i++) {
-					UserInfomation uinf = vc.elementAt(i);
+				for (int i = 0; i < userVector.size(); i++) {
+					UserInfomation uinf = userVector.elementAt(i);
 					sendmessage("OldUser/" + uinf.nickName);
 				}
 				for (int i = 0; i < vc_room.size(); i++) {
@@ -210,7 +213,7 @@ public class Server extends JFrame implements ActionListener {
 				}
 
 				// 사용자에게 자신을 알린후 벡터에 자신을 추가한다.
-				vc.add(this);
+				userVector.add(this);
 
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(null, "Stream설정에러!", "알림", JOptionPane.ERROR_MESSAGE);
@@ -220,6 +223,7 @@ public class Server extends JFrame implements ActionListener {
 		// 브로드캐스트
 		@Override
 		public void run() {
+
 			while (true) {
 				try {
 					String msg = dis.readUTF();
@@ -230,21 +234,23 @@ public class Server extends JFrame implements ActionListener {
 						textArea.append(nickName + " : 사용자접속끊어짐\n");
 						dos.close();
 						dis.close();
-						user_socket.close();
-						vc.remove(this);
+						socket.close();
+						userVector.remove(this);
 						vc_room.remove(this);
 						broadCast("UserOut/" + nickName);
 						broadCast("ErrorOutRoom/" + myCurrentRoomName);
-						broadCast("UserData_Updata/ok");
+						broadCast("UserDSata_Updata/ok");
 						break;
 					} catch (IOException e1) {
 						break;
 					}
 				}
 			}
+			
 		}
 
 		private void inmessage(String str) {
+
 			StringTokenizer st = new StringTokenizer(str, "/");
 
 			String protocol = st.nextToken();
@@ -259,8 +265,8 @@ public class Server extends JFrame implements ActionListener {
 				String user = st.nextToken();
 				String note = st.nextToken();
 				// 백터에서 해당 사용자를 찾아서 쪽지를 전송한다.
-				for (int i = 0; i < vc.size(); i++) {
-					UserInfomation u = vc.elementAt(i);
+				for (int i = 0; i < userVector.size(); i++) {
+					UserInfomation u = userVector.elementAt(i);
 					// 쪽지는 반드시 찾은 사용자에게 메세지를 보내줘어야 한다.
 					if (u.nickName.equals(user)) {
 						u.sendmessage("Note/" + nickName + "@" + note);
@@ -285,7 +291,7 @@ public class Server extends JFrame implements ActionListener {
 					vc_room.add(new_room);
 					// 3.사용자들에게 방과 방이름을 생성되었다고 알려준다.
 					sendmessage("CreateRoom/" + message); // 자신에게 방 성공 메세지를 보낸다.
-					broadCast("new_Room/" + message);
+				     broadCast("new_Room/" + message);
 				}
 			} else if (protocol.equals("Chatting")) {
 				String msg = st.nextToken();
@@ -332,24 +338,24 @@ public class Server extends JFrame implements ActionListener {
 	class RoomInfomation {
 
 		String roomName;
-		Vector<UserInfomation> room_user_vc = new Vector<UserInfomation>();
+		Vector<UserInfomation> userSocketRoom = new Vector<UserInfomation>();
 
 		public RoomInfomation(String roomName, UserInfomation u) {
 			this.roomName = roomName;
-			this.room_user_vc.add(u);
+			this.userSocketRoom.add(u);
 			// 와우 대박. ㅋㅋ
 			u.myCurrentRoomName = roomName;
 		}
 
 		private void roomBroadcast(String str) { // 현재방의 모든 사람들에게 알린다.
-			for (int i = 0; i < room_user_vc.size(); i++) {
-				UserInfomation u = room_user_vc.elementAt(i);
+			for (int i = 0; i < userSocketRoom.size(); i++) {
+				UserInfomation u = userSocketRoom.elementAt(i);
 				u.sendmessage(str);
 			}
 		}
 
 		private void addUser(UserInfomation u) {
-			room_user_vc.add(u);
+			userSocketRoom.add(u);
 		}
 
 		@Override
@@ -358,8 +364,8 @@ public class Server extends JFrame implements ActionListener {
 		}
 
 		private void removeRoom(UserInfomation u) {
-			room_user_vc.remove(u);
-			boolean empty = room_user_vc.isEmpty();
+			userSocketRoom.remove(u);
+			boolean empty = userSocketRoom.isEmpty();
 			if (empty) {
 				for (int i = 0; i < vc_room.size(); i++) {
 					RoomInfomation r = vc_room.elementAt(i);
