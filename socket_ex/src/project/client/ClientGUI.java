@@ -219,7 +219,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		sendButton.setBorder(new LineBorder(new Color(142, 190, 219)));
 		sendButton.setForeground(new Color(27, 135, 196));
 		sendButton.setBackground(Color.white);
-		sendButton.setFocusPainted(false); 
+		sendButton.setFocusPainted(false);
 		sendButton.setEnabled(false);
 		chattingPanel.add(sendButton);
 
@@ -295,7 +295,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 
 			}
 
-		} 	else if (e.getSource().equals(sendWisper)) {
+		} else if (e.getSource().equals(sendWisper)) {
 			String user = userTotalList.getSelectedValue();
 			if (user == null) {
 				JOptionPane.showMessageDialog(null, "※ 대상을 선택하세요", "알림", JOptionPane.ERROR_MESSAGE);
@@ -345,7 +345,9 @@ public class ClientGUI extends JFrame implements ActionListener {
 			}
 		} else if (e.getSource().equals(sendButton)) {
 			System.out.println("메시지 보내기 ");
-			client.sendmessage("Chatting/" + myRoomName + "/" + chatting.getText().trim());
+			if (chatting.getText() != null) {
+				client.sendmessage("Chatting/" + myRoomName + "/" + chatting.getText().trim());
+			}
 		} else if (e.getSource().equals(chattingRoomDelete)) {
 			System.out.println(" 채팅방삭제 ");
 			client.sendmessage("DeleteRoom/" + myRoomName);

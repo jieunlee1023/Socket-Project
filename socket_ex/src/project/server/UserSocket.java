@@ -126,13 +126,19 @@ public class UserSocket extends Thread {
 
 			}
 		} else if (protocol.equals("Chatting")) {
-			String chattingMsg = st.nextToken();
-			for (int i = 0; i < mContext.server.getRoomVector().size(); i++) {
-				Room room = mContext.server.getRoomVector().elementAt(i);
-				if (room.getRoomName().equals(message)) {
-					room.roomBroadcast("Chatting/" + nickName + "/" + chattingMsg);
+			try {
+				String chattingMsg = st.nextToken();
+				for (int i = 0; i < mContext.server.getRoomVector().size(); i++) {
+					Room room = mContext.server.getRoomVector().elementAt(i);
+					if (room.getRoomName().equals(message)) {
+						room.roomBroadcast("Chatting/" + nickName + "/" + chattingMsg);
+					}
 				}
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "※ 보내실 메시지를 입력하세요.", "알림", JOptionPane.ERROR_MESSAGE);
+
 			}
+
 		} else if (protocol.equals("JoinRoom")) {
 			for (int i = 0; i < mContext.server.getRoomVector().size(); i++) {
 				Room room = mContext.server.getRoomVector().elementAt(i);
