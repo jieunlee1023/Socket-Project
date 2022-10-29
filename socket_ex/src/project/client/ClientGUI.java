@@ -59,6 +59,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 	private JLabel chat = new JLabel("[ 대 화 창 ]");
 	private JTextArea viewChat = new JTextArea();
 	private JTextArea chatting = new JTextArea();
+	private JButton chattingRoomSendWisper = new JButton("귓말 보내기");
 	private JButton sendButton = new JButton("보내기");
 	private JButton chatExit = new JButton("나가기");
 	private JButton chattingRoomDelete = new JButton("채팅방 삭제");
@@ -208,7 +209,6 @@ public class ClientGUI extends JFrame implements ActionListener {
 
 		chattingRoomTotalList.setBounds(12, 75, 90, 250);
 		chattingRoomTotalList.setBorder(new LineBorder(new Color(142, 190, 219)));
-		chattingRoomTotalList.setEnabled(false);
 		chattingPanel.add(chattingRoomTotalList);
 
 		chatting.setBounds(12, 520, 370, 50);
@@ -222,6 +222,14 @@ public class ClientGUI extends JFrame implements ActionListener {
 		sendButton.setFocusPainted(false);
 		sendButton.setEnabled(false);
 		chattingPanel.add(sendButton);
+
+		chattingRoomSendWisper.setBounds(12, 330, 90, 30);
+		chattingRoomSendWisper.setBackground(Color.white);
+		chattingRoomSendWisper.setForeground(new Color(27, 135, 196));
+		chattingRoomSendWisper.setFocusPainted(false);
+		chattingRoomSendWisper.setBorder(new LineBorder(new Color(142, 190, 219)));
+		chattingRoomSendWisper.setEnabled(false);
+		chattingPanel.add(chattingRoomSendWisper);
 
 		chattingRoomDelete.setBounds(300, 10, 80, 30);
 		chattingRoomDelete.setBackground(Color.white);
@@ -255,6 +263,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		chattingRoomDelete.addActionListener(this);
 		sendButton.addActionListener(this);
 		chatExit.addActionListener(this);
+		chattingRoomSendWisper.addActionListener(this);
 	}
 
 	@Override
@@ -287,6 +296,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 					chattingRoomCreate.setEnabled(true);
 					chattingRoomStart.setEnabled(true);
 					chattingRoomDelete.setEnabled(false);
+					chattingRoomSendWisper.setEnabled(false);
 					sendButton.setEnabled(false);
 					chatExit.setEnabled(false);
 
@@ -299,23 +309,42 @@ public class ClientGUI extends JFrame implements ActionListener {
 			String user = userTotalList.getSelectedValue();
 			if (user == null) {
 				JOptionPane.showMessageDialog(null, "※ 대상을 선택하세요", "알림", JOptionPane.ERROR_MESSAGE);
+			}
+			if (user == client.getClientNickName()) {
+				JOptionPane.showMessageDialog(null, "※ 자기 자신에게는 귓속말을 보낼 수 없습니다.", "알림", JOptionPane.ERROR_MESSAGE);
 			} else {
 				Wisper wisperFrame = new Wisper(mContext);
 				wisperFrame.getWisperField().setText(user);
 
 			}
-		} else if (e.getSource().equals(chattingRoomCreate)) {
+
+		} else if (e.getSource().equals(chattingRoomSendWisper)) {
+			String user = chattingRoomTotalList.getSelectedValue();
+			if (user == null) {
+				JOptionPane.showMessageDialog(null, "※ 대상을 선택하세요", "알림", JOptionPane.ERROR_MESSAGE);
+			}
+			if (user == client.getUserNickName()) {
+				JOptionPane.showMessageDialog(null, "※ 자기 자신에게는 귓속말을 보낼 수 없습니다.", "알림", JOptionPane.ERROR_MESSAGE);
+			} else {
+				Wisper wisperFrame = new Wisper(mContext);
+				wisperFrame.getWisperField().setText(user);
+
+			}
+		}
+
+		else if (e.getSource().equals(chattingRoomCreate)) {
 			System.out.println(" 채팅방 개설 ");
 			String roomName = JOptionPane.showInputDialog("방 이름을 입력하세요");
 			if (roomName != null) {
 				client.sendmessage("CreateRoom/" + roomName);
 				jtab.setSelectedIndex(2);
 
-				client.sendmessage("NewChatUser/ [ " + client.getClientNickName() + " ] 님 입장 ");
+				client.sendmessage("NewChatUser/ [ " + client.getClientNickName() + " ] 님이 방을 개설했습니다.");
 
 				sendWisper.setEnabled(false);
 				chattingRoomCreate.setEnabled(false);
 				chattingRoomStart.setEnabled(false);
+				chattingRoomSendWisper.setEnabled(true);
 				chattingRoomDelete.setEnabled(true);
 				sendButton.setEnabled(true);
 				chatExit.setEnabled(true);
@@ -333,12 +362,13 @@ public class ClientGUI extends JFrame implements ActionListener {
 				jtab.setSelectedIndex(2);
 
 				client.sendmessage(
-						"NewChatUser/ [ " + client.getClientNickName() + " ] 님 [ " + myRoomName + " ] 에 입장 ");
+						"NewChatUser/ [ " + client.getClientNickName() + " ] 님 입장 ");
 
 				sendWisper.setEnabled(false);
 				chattingRoomCreate.setEnabled(false);
 				chattingRoomStart.setEnabled(false);
 
+				chattingRoomSendWisper.setEnabled(true);
 				chattingRoomDelete.setEnabled(true);
 				sendButton.setEnabled(true);
 				chatExit.setEnabled(true);
@@ -358,6 +388,8 @@ public class ClientGUI extends JFrame implements ActionListener {
 			sendWisper.setEnabled(true);
 			chattingRoomCreate.setEnabled(true);
 			chattingRoomStart.setEnabled(true);
+
+			chattingRoomSendWisper.setEnabled(false);
 			chattingRoomDelete.setEnabled(false);
 			sendButton.setEnabled(false);
 			chatExit.setEnabled(false);
@@ -373,6 +405,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 			sendWisper.setEnabled(true);
 			chattingRoomCreate.setEnabled(true);
 			chattingRoomStart.setEnabled(true);
+			chattingRoomSendWisper.setEnabled(false);
 			chattingRoomDelete.setEnabled(false);
 			sendButton.setEnabled(false);
 			chatExit.setEnabled(false);
@@ -434,6 +467,8 @@ public class ClientGUI extends JFrame implements ActionListener {
 			wisper.getWisperUser().setText("보낸 사람 : ");
 			wisper.getWisperField().setText(fromUser);
 			wisper.getWisperArea().setText(wisperMessage);
+			wisper.getWisperArea().setBackground(new Color(238, 238, 238));
+			wisper.getWisperArea().setEditable(false);
 
 		} else if (protocol.equals("CreateRoom")) {
 			myRoomName = message;
@@ -456,7 +491,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		} else if (protocol.equals("UserOut")) {
 			chattingList.remove(message);
 			chattingRoomTotalList.setListData(chattingList);
-			viewChat.append("[ ※ < " + client.getClientNickName() + " > 가 < " + myRoomName + " > 에서 퇴장하였습니다. ] \n ");
+			viewChat.append("[ ※ < " + client.getClientNickName() + " > 님이 < " + myRoomName + " > 에서 퇴장하였습니다. ] \n ");
 		} else if (protocol.equals("UserAllOut")) {
 			chattingList.removeAllElements();
 			viewChat.append("※ [ " + myRoomName + " ] 방이 삭제 되었습니다. \n");
@@ -492,12 +527,6 @@ public class ClientGUI extends JFrame implements ActionListener {
 		} else if (protocol.equals("ErrorOutRoom")) {
 			roomList.remove(message);
 		}
-	}
-
-	public static void main(String[] args) {
-		new ClientGUI();
-		new ClientGUI();
-		new ServerGUI();
 	}
 
 }

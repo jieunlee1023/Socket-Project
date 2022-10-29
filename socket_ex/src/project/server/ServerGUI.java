@@ -44,7 +44,8 @@ public class ServerGUI extends JFrame implements ActionListener {
 		setSize(500, 650);
 		setTitle("Server Page");
 		setResizable(false);
-		setLocationRelativeTo(null);
+		setLocation(100, 187);
+//		setLocationRelativeTo(null);
 	}
 
 	private void setInitLayout() {
@@ -106,8 +107,7 @@ public class ServerGUI extends JFrame implements ActionListener {
 					serverStart.setEnabled(false);
 					serverStop.setEnabled(true);
 				} catch (NumberFormatException e2) {
-					JOptionPane.showMessageDialog
-					(null, "※ PORT는 숫자만 입력 가능합니다.", "알림", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "※ PORT는 숫자만 입력 가능합니다.", "알림", JOptionPane.ERROR_MESSAGE);
 				}
 
 			}

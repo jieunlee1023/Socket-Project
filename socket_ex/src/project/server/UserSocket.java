@@ -167,13 +167,6 @@ public class UserSocket extends Thread {
 				}
 			}
 		} else if (protocol.equals("ExitRoom")) {
-			for (int i = 0; i < mContext.server.getUserVector().size(); i++) {
-				UserSocket userSocket = mContext.server.getUserVector().elementAt(i);
-				if (userSocket.getNickName().equals(message)) {
-					sendMessage("ExtiRoom/ok");
-					break;
-				}
-			}
 			mContext.server.broadCast("UserOut/" + nickName);
 
 			for (int i = 0; i < mContext.server.getRoomVector().size(); i++) {
