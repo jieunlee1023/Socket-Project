@@ -26,13 +26,13 @@ public class ServerGUI extends JFrame implements ActionListener {
 	public Server server;
 	public UserSocket userSocket;
 
-	private JPanel mainPanel = new JPanel();
-	private JLabel logo = new JLabel(new ImageIcon(Define.IMAGE_PATH + "logo" + Define.IMAGE_PNG_TYPE));
-	private JTextArea mainArea = new JTextArea();
-	private JLabel portNumberName = new JLabel("PORT NUMBER : ");
-	private JTextField inputPortNumber = new JTextField("20000");
-	private JButton serverStart = new JButton("서버 실행");
-	private JButton serverStop = new JButton(" 서버 종료");
+	private JPanel mainPanel;
+	private JLabel logo;
+	private JTextArea mainArea;
+	private JLabel portNumberName;
+	private JTextField inputPortNumber;
+	private JButton serverStart;
+	private JButton serverStop;
 
 	public ServerGUI() {
 		initData();
@@ -45,7 +45,15 @@ public class ServerGUI extends JFrame implements ActionListener {
 		setTitle("Server Page");
 		setResizable(false);
 		setLocation(100, 187);
-//		setLocationRelativeTo(null);
+
+		mainPanel = new JPanel();
+		logo = new JLabel(new ImageIcon
+				(Define.IMAGE_PATH + "logo" + Define.IMAGE_PNG_TYPE));
+		mainArea = new JTextArea();
+		portNumberName = new JLabel("PORT NUMBER : ");
+		inputPortNumber = new JTextField("20000");
+		serverStart = new JButton("서버 실행");
+		serverStop = new JButton(" 서버 종료");
 	}
 
 	private void setInitLayout() {
@@ -96,7 +104,7 @@ public class ServerGUI extends JFrame implements ActionListener {
 
 		if (e.getSource().equals(serverStart)) {
 			if (inputPortNumber.getText().length() == 0) {
-				JOptionPane.showMessageDialog(null, "포트 번호를 입력하여 주세요!", "알림", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "※ 포트 번호를 입력하여 주세요!", "알림", JOptionPane.ERROR_MESSAGE);
 			} else if (inputPortNumber.getText().length() != 0) {
 				try {
 					int port = Integer.parseInt(inputPortNumber.getText());

@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
@@ -46,7 +45,7 @@ public class UserSocket extends Thread {
 		}
 	}
 
-	public void network() {
+	private void network() {
 		try {
 			nickName = bufferedReader.readLine();
 			mContext.getMainArea().append("※ [ " + nickName + " ] 이 입장하였습니다.\n");
@@ -173,6 +172,7 @@ public class UserSocket extends Thread {
 				System.out.println("Room out i:" + i);
 				Room room = mContext.server.getRoomVector().elementAt(i);
 				if (room.getRoomName().equals(message)) {
+					room.roomBroadcast("Chatting/[알림]/ [ " + nickName + " ] 님이 퇴장 하였습니다. ");
 					room.exitRoom(this);
 					break;
 				}

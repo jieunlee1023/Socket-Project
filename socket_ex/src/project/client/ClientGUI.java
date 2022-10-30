@@ -30,46 +30,45 @@ public class ClientGUI extends JFrame implements ActionListener {
 	private ClientGUI mContext = this;
 	private Client client;
 
-	private JPanel loginPanel = new JPanel();
-	private JLabel loginBgImg = new JLabel(new ImageIcon(Define.IMAGE_PATH + "login" + Define.IMAGE_PNG_TYPE));
-	private JLabel hostIp = new JLabel("HOST IP : ");
-	private JTextField hostIpTF = new JTextField("127.0.0.1");
-	private JLabel serverPort = new JLabel("SERVER PORT : ");
-	private JTextField serverPortTF = new JTextField("20000");
-	private JLabel nickName = new JLabel("NICK NAME : ");
-	private JTextField nickNameTF = new JTextField("이지은");
-	private JButton logIn = new JButton("로그인");
-	private JButton exit = new JButton("나가기");
+	private JPanel loginPanel;
+	private JLabel loginBgImg;
+	private JLabel hostIp;
+	private JTextField hostIpTF;
+	private JLabel serverPort;
+	private JTextField serverPortTF;
+	private JLabel nickName;
+	private JTextField nickNameTF;
+	private JButton logIn;
+	private JButton exit;
 
-	private JPanel watingRoomPanel = new JPanel();
-	private JLabel watingRoomBgImg = new JLabel(new ImageIcon(Define.IMAGE_PATH + "waiting" + Define.IMAGE_PNG_TYPE));
-//	private JLabel watingRoomGif = new JLabel(new ImageIcon(Define.IMAGE_PATH + "gifimg.gif"));
-	private JButton userTotal = new JButton("접속자");
-	private JList<String> userTotalList = new JList<>();
-	private JButton roomTotal = new JButton("채팅방");
-	private JList<String> roomTotalList = new JList<>();
-	private JButton sendWisper = new JButton("귓말 보내기");
-	private JButton chattingRoomCreate = new JButton("채팅방 개설");
-	private JButton chattingRoomStart = new JButton("채팅방 입장");
+	private JPanel watingRoomPanel;
+	private JLabel watingRoomBgImg;
+	private JButton userTotal;
+	private JList<String> userTotalList;
+	private JButton roomTotal;
+	private JList<String> roomTotalList;
+	private JButton sendWisper;
+	private JButton chattingRoomCreate;
+	private JButton chattingRoomStart;
 
-	private JPanel chattingPanel = new JPanel();
-	private JLabel chattingBgImg = new JLabel(new ImageIcon(Define.IMAGE_PATH + "chatting" + Define.IMAGE_PNG_TYPE));
-	private JLabel chattingRoomTotal = new JLabel("[ 방 접속자 ]");
-	private JList<String> chattingRoomTotalList = new JList<>();
-	private JLabel chat = new JLabel("[ 대 화 창 ]");
-	private JTextArea viewChat = new JTextArea();
-	private JTextArea chatting = new JTextArea();
-	private JButton chattingRoomSendWisper = new JButton("귓말 보내기");
-	private JButton sendButton = new JButton("보내기");
-	private JButton chatExit = new JButton("나가기");
-	private JButton chattingRoomDelete = new JButton("채팅방 삭제");
+	private JPanel chattingPanel;
+	private JLabel chattingBgImg;
+	private JLabel chattingRoomTotal;
+	private JList<String> chattingRoomTotalList;
+	private JLabel chat;
+	private JTextArea viewChat;
+	private JTextArea chatting;
+	private JButton chattingRoomSendWisper;
+	private JButton sendButton;
+	private JButton chatExit;
+	private JButton chattingRoomDelete;
 
-	private JTabbedPane jtab = new JTabbedPane(JTabbedPane.TOP);
+	private JTabbedPane jtab;
 
 	private StringTokenizer st;
-	private Vector<String> userList = new Vector<String>();
-	private Vector<String> roomList = new Vector<String>();
-	private Vector<String> chattingList = new Vector<String>();
+	private Vector<String> userList;
+	private Vector<String> roomList;
+	private Vector<String> chattingList;
 	private String myRoomName;
 
 	public ClientGUI() {
@@ -83,6 +82,47 @@ public class ClientGUI extends JFrame implements ActionListener {
 		setTitle("Client Page");
 		setResizable(false);
 		setLocationRelativeTo(null);
+
+		loginPanel = new JPanel();
+		loginBgImg = new JLabel(new ImageIcon(Define.IMAGE_PATH + "login" + Define.IMAGE_PNG_TYPE));
+		hostIp = new JLabel("HOST IP : ");
+		hostIpTF = new JTextField("127.0.0.1");
+		serverPort = new JLabel("SERVER PORT : ");
+		serverPortTF = new JTextField("20000");
+		nickName = new JLabel("NICK NAME : ");
+		nickNameTF = new JTextField("이지은");
+		logIn = new JButton("로그인");
+		exit = new JButton("나가기");
+
+		watingRoomPanel = new JPanel();
+		watingRoomBgImg = new JLabel
+				(new ImageIcon(Define.IMAGE_PATH + "waiting" + Define.IMAGE_PNG_TYPE));
+		userTotal = new JButton("접속자");
+		userTotalList = new JList<>();
+		roomTotal = new JButton("채팅방");
+		roomTotalList = new JList<>();
+		sendWisper = new JButton("귓말 보내기");
+		chattingRoomCreate = new JButton("채팅방 개설");
+		chattingRoomStart = new JButton("채팅방 입장");
+
+		chattingPanel = new JPanel();
+		chattingBgImg = new JLabel
+				(new ImageIcon(Define.IMAGE_PATH + "chatting" + Define.IMAGE_PNG_TYPE));
+		chattingRoomTotal = new JLabel("[ 방 접속자 ]");
+		chattingRoomTotalList = new JList<>();
+		chat = new JLabel("[ 대 화 창 ]");
+		viewChat = new JTextArea();
+		chatting = new JTextArea();
+		chattingRoomSendWisper = new JButton("귓말 보내기");
+		sendButton = new JButton("보내기");
+		chatExit = new JButton("나가기");
+		chattingRoomDelete = new JButton("채팅방 삭제");
+
+		jtab = new JTabbedPane(JTabbedPane.TOP);
+
+		userList = new Vector<String>();
+		roomList = new Vector<String>();
+		chattingList = new Vector<String>();
 	}
 
 	private void setInitLayout() {
@@ -361,8 +401,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 				client.sendmessage("JoinRoom/" + joinRoom);
 				jtab.setSelectedIndex(2);
 
-				client.sendmessage(
-						"NewChatUser/ [ " + client.getClientNickName() + " ] 님 입장 ");
+				client.sendmessage("NewChatUser/ [ " + client.getClientNickName() + " ] 님 입장 ");
 
 				sendWisper.setEnabled(false);
 				chattingRoomCreate.setEnabled(false);
@@ -400,7 +439,10 @@ public class ClientGUI extends JFrame implements ActionListener {
 			JOptionPane.showMessageDialog(null, "채팅방을 나갑니다", "알림", JOptionPane.CANCEL_OPTION);
 			client.sendmessage("ExitRoom/" + myRoomName);
 			jtab.setSelectedIndex(1);
+			
 			viewChat.setText(" ");
+			chattingRoomTotalList.removeAll();
+			
 
 			sendWisper.setEnabled(true);
 			chattingRoomCreate.setEnabled(true);
@@ -473,13 +515,14 @@ public class ClientGUI extends JFrame implements ActionListener {
 		} else if (protocol.equals("CreateRoom")) {
 			myRoomName = message;
 		} else if (protocol.equals("CreateRoomFail")) {
-			JOptionPane.showMessageDialog(null, "※ 같은 방 이름이 존재합니다.!", "알림", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog
+			(null, "※ 같은 방 이름이 존재합니다.!", "알림", JOptionPane.ERROR_MESSAGE);
 		} else if (protocol.equals("NewRoom")) {
 			roomList.add(message);
 			roomTotalList.setListData(roomList);
 		} else if (protocol.equals("Chatting")) {
 			String chattingMsg = st.nextToken();
-			viewChat.append(message + " : " + chattingMsg + "\n");
+			viewChat.append( message + " : " + chattingMsg + "\n");
 		} else if (protocol.equals("OldRoom")) {
 			roomList.add(message);
 			roomTotalList.setListData(roomList);
@@ -491,7 +534,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		} else if (protocol.equals("UserOut")) {
 			chattingList.remove(message);
 			chattingRoomTotalList.setListData(chattingList);
-			viewChat.append("[ ※ < " + client.getClientNickName() + " > 님이 < " + myRoomName + " > 에서 퇴장하였습니다. ] \n ");
+			//viewChat.append("[ ※ < " + client.getClientNickName() + " > 님이 < " + myRoomName + " > 에서 퇴장하였습니다. ] \n ");
 		} else if (protocol.equals("UserAllOut")) {
 			chattingList.removeAllElements();
 			viewChat.append("※ [ " + myRoomName + " ] 방이 삭제 되었습니다. \n");
@@ -516,7 +559,8 @@ public class ClientGUI extends JFrame implements ActionListener {
 			roomTotalList.setListData(roomList);
 		} else if (protocol.equals("ExitRoom")) {
 			myRoomName = null;
-			viewChat.append("[ " + myRoomName + " ] 에서 [ " + client.getClientNickName() + " ] 님이 퇴장했습니다.\n");
+			viewChat.append("[ " + myRoomName + " ] 에서 [ " 
+			+ client.getClientNickName() + " ] 님이 퇴장했습니다.\n");
 		} else if (protocol.equals("DeleteRoom")) {
 			myRoomName = null;
 			chattingList.remove(message);

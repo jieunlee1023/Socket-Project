@@ -82,12 +82,12 @@ public class Client {
 		} catch (IOException e) {
 			loginConnect = false;
 			JOptionPane.showMessageDialog(null, 
-					"연결에 실패했습니다.", "알림", JOptionPane.ERROR_MESSAGE);
+					"※ 연결에 실패했습니다.", "알림", JOptionPane.ERROR_MESSAGE);
 		} catch (Exception e) {
 			loginConnect = false;
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, 
-					"연결에 실패했습니다.", "알림", JOptionPane.ERROR_MESSAGE);
+					"※ 연결에 실패했습니다.", "알림", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

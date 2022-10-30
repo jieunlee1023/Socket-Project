@@ -39,7 +39,8 @@ public class Wisper extends JFrame implements ActionListener {
 		setResizable(false);
 		setLocationRelativeTo(null);
 		wisperImg = new JLabel
-				(new ImageIcon(Define.IMAGE_PATH + "message" + Define.IMAGE_PNG_TYPE));
+				(new ImageIcon(Define.IMAGE_PATH 
+						+ "message" + Define.IMAGE_PNG_TYPE));
 		wisperUser = new JLabel("받는 사람 : ");
 		wisperField = new JTextField();
 		wisperArea = new JTextArea("※ 귓속말로 보낼 메시지를 적어주세요!");
@@ -85,7 +86,8 @@ public class Wisper extends JFrame implements ActionListener {
 					+ "@" + wisperArea.getText();
 			System.out.println("메시지>>>" + message);
 			clientGUIContext.getClient().sendmessage(message);
-			JOptionPane.showMessageDialog(null, "전송 완료!", "♥", JOptionPane.CLOSED_OPTION, null);
+			JOptionPane.showMessageDialog
+			(null, "전송 완료!", "♥", JOptionPane.CLOSED_OPTION, null);
 			this.dispose();
 		}
 	}

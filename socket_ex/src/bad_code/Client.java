@@ -337,7 +337,6 @@ public class Client extends JFrame implements ActionListener {
 			dos.writeUTF(msg);
 			dos.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
