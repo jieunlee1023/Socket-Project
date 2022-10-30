@@ -531,7 +531,11 @@ public class ClientGUI extends JFrame implements ActionListener {
 			JOptionPane.showMessageDialog(null, "채팅방 [ " + myRoomName + " ] 에 입장완료", "알림",
 					JOptionPane.INFORMATION_MESSAGE);
 			viewChat.setText(" ");
-		} else if (protocol.equals("UserOut")) {
+		} else if (protocol.equals("UserLogOut")) {
+			userList.remove(message);
+			userTotalList.setListData(userList);
+			//viewChat.append("[ ※ < " + client.getClientNickName() + " > 님이 < " + myRoomName + " > 에서 퇴장하였습니다. ] \n ");
+		}else if (protocol.equals("UserOut")) {
 			chattingList.remove(message);
 			chattingRoomTotalList.setListData(chattingList);
 			//viewChat.append("[ ※ < " + client.getClientNickName() + " > 님이 < " + myRoomName + " > 에서 퇴장하였습니다. ] \n ");

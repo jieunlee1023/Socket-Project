@@ -79,14 +79,21 @@ public class UserSocket extends Thread {
 				mContext.getMainArea().append("[ " + nickName + " ] : " + msg + "\n");
 				inmessage(msg);
 			} catch (IOException e) {
-				isRun = false;
-				mContext.getMainArea().append(nickName + " : 사용자접속끊어짐\n");
-				mContext.server.userVector.remove(this);
-				mContext.server.roomVector.remove(this);
-				mContext.server.broadCast("UserOut/" + nickName);
-				mContext.server.broadCast("ErrorOutRoom/" + myCurrentRoomName);
-				mContext.server.broadCast("UpdateDeleteUserData/ok");
-				mContext.server.broadCast("UpdateExitUserData/ok");
+				try {
+					isRun = false;
+					mContext.getMainArea().append(" [ " + nickName + " ] : 사용자 접속 끊어짐\n");
+					bufferedReader.close();
+					bufferedWriter.close();
+					socket.close();
+					mContext.server.userVector.remove(this);
+					mContext.server.roomVector.remove(this);
+					mContext.server.broadCast("UserLogOut/" + nickName);
+					mContext.server.broadCast("ErrorOutRoom/" + myCurrentRoomName);
+					mContext.server.broadCast("UpdateExitUserData/ok");
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
 				break;
 			}
 		}
