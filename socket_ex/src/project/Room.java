@@ -40,6 +40,7 @@ public class Room {
 	public void checkRoomUser(UserSocket userSocket) {
 		for (int i = 0; i < userSocketRoom.size(); i++) {
 			UserSocket socket = userSocketRoom.elementAt(i);
+			System.out.println("방에 있던 유저체크 : "+socket.getNickName());
 			userSocket.sendMessage("OldChatUser/" + socket.getNickName());
 		}
 	}
@@ -67,7 +68,7 @@ public class Room {
 				System.out.println("zzzzzzzzzzzzzzzzzzzzzzzzzzz"+userSocket.getNickName());
 				userSocket.sendMessage("ExitRoom/"+userSocket.getNickName());
 			}
-			mContext.server.broadCast("UpdateExitUserData/ok");
+			mContext.server.broadCast("UpdateExitUserData/"+userSocket.getNickName());
 		}
 
 	}

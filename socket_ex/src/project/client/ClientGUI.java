@@ -500,14 +500,16 @@ public class ClientGUI extends JFrame implements ActionListener {
 			System.out.println("roomName:" + roomName);
 			System.out.println("userNickName:" + userNickName);
 			System.out.println("------------------------------");
-
-			chattingList.add(userNickName);
-			chattingRoomTotalList.setListData(chattingList);
+			
+			if (roomName.equals(myRoomName)) {				
+				chattingList.add(userNickName);
+				chattingRoomTotalList.setListData(chattingList);
+			}
 
 		} else if (protocol.equals("OldChatUser")) {
-				chattingList.add(message);
-				chattingRoomTotalList.setListData(chattingList);
-				System.out.println("원래있던 채팅유저?"+message);
+			chattingList.add(message);
+			chattingRoomTotalList.setListData(chattingList);
+			System.out.println("원래있던 채팅유저?" + message);
 		} else if (protocol.equals("Wisper")) {
 
 			System.out.println("귓말 들어옴! " + message);
@@ -577,11 +579,18 @@ public class ClientGUI extends JFrame implements ActionListener {
 		} else if (protocol.equals("UpdateDeleteUserData")) {
 			userTotalList.setListData(userList);
 			roomTotalList.setListData(roomList);
+			chattingList.removeAllElements();
+			chattingRoomTotalList.setListData(chattingList);
 		} else if (protocol.equals("UpdateExitUserData")) {
 			userTotalList.setListData(userList);
 			roomTotalList.setListData(roomList);
+			chattingList.remove(message);
+			chattingRoomTotalList.setListData(chattingList);
 		} else if (protocol.equals("ExitRoom")) {
 			myRoomName = null;
+			chattingList.removeAllElements();
+			chattingRoomTotalList.setListData(chattingList);
+			viewChat.setText(" ");
 		} else if (protocol.equals("DeleteRoom")) {
 			myRoomName = null;
 			chattingList.remove(message);

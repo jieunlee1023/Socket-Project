@@ -126,7 +126,8 @@ public class UserSocket extends Thread {
 				mContext.server.getRoomVector().add(newRoom);
 				sendMessage("CreateRoom/" + message);
 				mContext.server.broadCast("NewRoom/" + message);
-				mContext.server.roomBroadCast("NewChatUser/" + message + "@" + nickName);
+				//mContext.server.roomBroadCast("NewChatUser/" + message + "@" + nickName);
+				sendMessage("NewChatUser/" + message + "@" + nickName);
 
 			}
 
@@ -151,6 +152,8 @@ public class UserSocket extends Thread {
 					//room.roomBroadcast("Chatting/[알림]/ [ " + nickName + " ] 님이 입장 하였습니다. ");
 					sendMessage("JoinRoom/" + message);
 
+					System.out.println("message???????????" + message);
+					System.out.println("this???????????" + this);
 					room.checkRoomUser(this);
 					room.addUser(this);
 					mContext.server.roomBroadCast("NewChatUser/" + message + "@" + nickName);
