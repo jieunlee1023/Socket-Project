@@ -11,6 +11,7 @@ public class StartMain {
 		new ClientGUI();
 		new ClientGUI();
 		new ClientGUI();
+		new ClientGUI();
 
 	}
 
