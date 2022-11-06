@@ -53,7 +53,6 @@ public class UserSocket extends Thread {
 
 			mContext.server.broadCast("NewUser/" + nickName);
 
-			System.out.println(mContext.server.getUserVector().size());
 			for (int i = 0; i < mContext.server.getUserVector().size(); i++) {
 				UserSocket userSocket = mContext.server.getUserVector().elementAt(i);
 				sendMessage("OldUser/" + userSocket.nickName);
@@ -62,7 +61,6 @@ public class UserSocket extends Thread {
 				Room room = mContext.server.getRoomVector().elementAt(i);
 				sendMessage("OldRoom/" + room.getRoomName());
 			}
-
 			mContext.server.getUserVector().add(this);
 
 		} catch (Exception e) {
@@ -101,6 +99,7 @@ public class UserSocket extends Thread {
 	}
 
 	public void inmessage(String msg) {
+
 		// 프로토콜의 개념 사용
 		StringTokenizer st = new StringTokenizer(msg, "/");
 
@@ -110,9 +109,7 @@ public class UserSocket extends Thread {
 		System.out.println("user 프로토콜 : " + protocol);
 		System.out.println("user 메시지 : " + message);
 
-		if (protocol.equals("NewChatUser")) {
-			mContext.server.broadCast("NewChatUser/" + nickName);
-		} else if (protocol.equals("CreateRoom")) {
+		if (protocol.equals("CreateRoom")) {
 			// 같은 방이 존재하는지 확인
 			for (int i = 0; i < mContext.server.getRoomVector().size(); i++) {
 				Room room = mContext.server.getRoomVector().elementAt(i);
@@ -129,8 +126,10 @@ public class UserSocket extends Thread {
 				mContext.server.getRoomVector().add(newRoom);
 				sendMessage("CreateRoom/" + message);
 				mContext.server.broadCast("NewRoom/" + message);
+				mContext.server.roomBroadCast("NewChatUser/" + message + "@" + nickName);
 
 			}
+
 		} else if (protocol.equals("Chatting")) {
 			try {
 				String chattingMsg = st.nextToken();
@@ -150,10 +149,15 @@ public class UserSocket extends Thread {
 				Room room = mContext.server.getRoomVector().elementAt(i);
 				if (room.getRoomName().equals(message)) {
 					room.roomBroadcast("Chatting/[알림]/ [ " + nickName + " ] 님이 입장 하였습니다. ");
-					room.addUser(this);
 					sendMessage("JoinRoom/" + message);
+
+					room.checkRoomUser(this);
+					room.addUser(this);
+					mContext.server.roomBroadCast("NewChatUser/" + message + "@" + nickName);
+
 				}
 			}
+
 		} else if (protocol.equals("DeleteRoom")) {
 			for (int i = 0; i < mContext.server.getUserVector().size(); i++) {
 				UserSocket userSocket = mContext.server.getUserVector().elementAt(i);
@@ -214,4 +218,7 @@ public class UserSocket extends Thread {
 		}
 	}
 
+	public static void main(String[] args) {
+		new ServerGUI();
+	}
 }

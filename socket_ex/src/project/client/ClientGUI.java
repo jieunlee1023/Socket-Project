@@ -55,6 +55,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 	private JLabel chattingBgImg;
 	private JLabel chattingRoomTotal;
 	private JList<String> chattingRoomTotalList;
+	private JTextField joinRoomTitle;
 	private JLabel chat;
 	private JTextArea viewChat;
 	private JTextArea chatting;
@@ -95,8 +96,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		exit = new JButton("나가기");
 
 		watingRoomPanel = new JPanel();
-		watingRoomBgImg = new JLabel
-				(new ImageIcon(Define.IMAGE_PATH + "waiting" + Define.IMAGE_PNG_TYPE));
+		watingRoomBgImg = new JLabel(new ImageIcon(Define.IMAGE_PATH + "waiting" + Define.IMAGE_PNG_TYPE));
 		userTotal = new JButton("접속자");
 		userTotalList = new JList<>();
 		roomTotal = new JButton("채팅방");
@@ -106,10 +106,10 @@ public class ClientGUI extends JFrame implements ActionListener {
 		chattingRoomStart = new JButton("채팅방 입장");
 
 		chattingPanel = new JPanel();
-		chattingBgImg = new JLabel
-				(new ImageIcon(Define.IMAGE_PATH + "chatting" + Define.IMAGE_PNG_TYPE));
+		chattingBgImg = new JLabel(new ImageIcon(Define.IMAGE_PATH + "chatting" + Define.IMAGE_PNG_TYPE));
 		chattingRoomTotal = new JLabel("[ 방 접속자 ]");
 		chattingRoomTotalList = new JList<>();
+		joinRoomTitle = new JTextField();
 		chat = new JLabel("[ 대 화 창 ]");
 		viewChat = new JTextArea();
 		chatting = new JTextArea();
@@ -243,6 +243,11 @@ public class ClientGUI extends JFrame implements ActionListener {
 		chattingPanel.add(scrollPane);
 		viewChat.setEditable(false);
 
+		joinRoomTitle.setBounds(60, 15, 100, 20);
+		joinRoomTitle.setEditable(false);
+		joinRoomTitle.setBorder(new LineBorder(new Color(142, 190, 219)));
+		chattingPanel.add(joinRoomTitle);
+
 		chat.setBounds(120, 50, 100, 30);
 		chat.setForeground(new Color(27, 135, 196));
 		chattingPanel.add(chat);
@@ -374,12 +379,11 @@ public class ClientGUI extends JFrame implements ActionListener {
 
 		else if (e.getSource().equals(chattingRoomCreate)) {
 			System.out.println(" 채팅방 개설 ");
-			String roomName = JOptionPane.showInputDialog("방 이름을 입력하세요");
-			if (roomName != null) {
-				client.sendmessage("CreateRoom/" + roomName);
+			String createRoomName = JOptionPane.showInputDialog("방 이름을 입력하세요");
+			if (createRoomName != null) {
+				client.sendmessage("CreateRoom/" + createRoomName);
+				joinRoomTitle.setText(createRoomName);
 				jtab.setSelectedIndex(2);
-
-				client.sendmessage("NewChatUser/ [ " + client.getClientNickName() + " ] 님이 방을 개설했습니다.");
 
 				sendWisper.setEnabled(false);
 				chattingRoomCreate.setEnabled(false);
@@ -399,9 +403,8 @@ public class ClientGUI extends JFrame implements ActionListener {
 
 			} else if (joinRoom != null && roomTotalList != null) {
 				client.sendmessage("JoinRoom/" + joinRoom);
+				joinRoomTitle.setText(joinRoom);
 				jtab.setSelectedIndex(2);
-
-				client.sendmessage("NewChatUser/ [ " + client.getClientNickName() + " ] 님 입장 ");
 
 				sendWisper.setEnabled(false);
 				chattingRoomCreate.setEnabled(false);
@@ -439,10 +442,6 @@ public class ClientGUI extends JFrame implements ActionListener {
 			JOptionPane.showMessageDialog(null, "채팅방을 나갑니다", "알림", JOptionPane.CANCEL_OPTION);
 			client.sendmessage("ExitRoom/" + myRoomName);
 			jtab.setSelectedIndex(1);
-			
-			viewChat.setText(" ");
-			chattingRoomTotalList.removeAll();
-			
 
 			sendWisper.setEnabled(true);
 			chattingRoomCreate.setEnabled(true);
@@ -494,8 +493,22 @@ public class ClientGUI extends JFrame implements ActionListener {
 			userList.add(message);
 			userTotalList.setListData(userList);
 		} else if (protocol.equals("NewChatUser")) {
-			chattingList.add(message);
+
+			StringTokenizer stringTokenizer = new StringTokenizer(message, "@");
+			String roomName = stringTokenizer.nextToken();
+			String userNickName = stringTokenizer.nextToken();
+			System.out.println("roomName:" + roomName);
+			System.out.println("userNickName:" + userNickName);
+			System.out.println("------------------------------");
+
+			chattingList.add(userNickName);
 			chattingRoomTotalList.setListData(chattingList);
+
+		} else if (protocol.equals("OldChatUser")) {
+			if (message != client.getClientNickName()) {
+				chattingList.add(message);
+				chattingRoomTotalList.setListData(chattingList);
+			}
 		} else if (protocol.equals("Wisper")) {
 
 			System.out.println("귓말 들어옴! " + message);
@@ -515,14 +528,22 @@ public class ClientGUI extends JFrame implements ActionListener {
 		} else if (protocol.equals("CreateRoom")) {
 			myRoomName = message;
 		} else if (protocol.equals("CreateRoomFail")) {
-			JOptionPane.showMessageDialog
-			(null, "※ 같은 방 이름이 존재합니다.!", "알림", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "※ 같은 방 이름이 존재합니다.!", "알림", JOptionPane.ERROR_MESSAGE);
+			jtab.setSelectedIndex(1);
+
+			sendWisper.setEnabled(true);
+			chattingRoomCreate.setEnabled(true);
+			chattingRoomStart.setEnabled(true);
+			chattingRoomSendWisper.setEnabled(false);
+			chattingRoomDelete.setEnabled(false);
+			sendButton.setEnabled(false);
+			chatExit.setEnabled(false);
 		} else if (protocol.equals("NewRoom")) {
 			roomList.add(message);
 			roomTotalList.setListData(roomList);
 		} else if (protocol.equals("Chatting")) {
 			String chattingMsg = st.nextToken();
-			viewChat.append( message + " : " + chattingMsg + "\n");
+			viewChat.append(message + " : " + chattingMsg + "\n");
 		} else if (protocol.equals("OldRoom")) {
 			roomList.add(message);
 			roomTotalList.setListData(roomList);
@@ -530,15 +551,14 @@ public class ClientGUI extends JFrame implements ActionListener {
 			myRoomName = message;
 			JOptionPane.showMessageDialog(null, "채팅방 [ " + myRoomName + " ] 에 입장완료", "알림",
 					JOptionPane.INFORMATION_MESSAGE);
-			viewChat.setText(" ");
 		} else if (protocol.equals("UserLogOut")) {
 			userList.remove(message);
 			userTotalList.setListData(userList);
-			//viewChat.append("[ ※ < " + client.getClientNickName() + " > 님이 < " + myRoomName + " > 에서 퇴장하였습니다. ] \n ");
-		}else if (protocol.equals("UserOut")) {
+
+		} else if (protocol.equals("UserOut")) {
 			chattingList.remove(message);
 			chattingRoomTotalList.setListData(chattingList);
-			//viewChat.append("[ ※ < " + client.getClientNickName() + " > 님이 < " + myRoomName + " > 에서 퇴장하였습니다. ] \n ");
+
 		} else if (protocol.equals("UserAllOut")) {
 			chattingList.removeAllElements();
 			viewChat.append("※ [ " + myRoomName + " ] 방이 삭제 되었습니다. \n");
@@ -563,8 +583,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 			roomTotalList.setListData(roomList);
 		} else if (protocol.equals("ExitRoom")) {
 			myRoomName = null;
-			viewChat.append("[ " + myRoomName + " ] 에서 [ " 
-			+ client.getClientNickName() + " ] 님이 퇴장했습니다.\n");
+			viewChat.append("[ " + myRoomName + " ] 에서 [ " + client.getClientNickName() + " ] 님이 퇴장했습니다.\n");
 		} else if (protocol.equals("DeleteRoom")) {
 			myRoomName = null;
 			chattingList.remove(message);
@@ -577,4 +596,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		}
 	}
 
+	public static void main(String[] args) {
+		new ClientGUI();
+	}
 }

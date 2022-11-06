@@ -9,6 +9,8 @@ public class StartMain {
 
 		new ServerGUI();
 		new ClientGUI();
+		new ClientGUI();
+		new ClientGUI();
 
 	}
 

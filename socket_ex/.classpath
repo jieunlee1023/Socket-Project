@@ -6,6 +6,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/ji_eu/OneDrive/바탕 화면/[개인] Socket project/tools/lombok.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ji_eu/OneDrive/바탕 화면/부트캠프/[221026~221030] Socket project/tools/lombok.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -69,7 +69,36 @@ public class Server {
 		}
 	}
 
+	public void roomBroadCast(String msg) {
+		// roomName @ nickName
+		System.out.println("------------------" + msg);
+		StringTokenizer st = new StringTokenizer(msg, "/");
+
+		String protocol = st.nextToken();
+		String message = st.nextToken();
+
+		StringTokenizer stringTokenizer = new StringTokenizer(message, "@");
+		String enterRoomName = stringTokenizer.nextToken();
+		String enterNickName = stringTokenizer.nextToken();
+
+		for (int i = 0; i < roomVector.size(); i++) {
+			String roomName = roomVector.get(i).getRoomName();
+			String targetRoom = enterRoomName;
+			String targetName = enterNickName;
+
+			if (roomName.equals(targetRoom)) {
+				System.out.println("같은방 찾음!!!!!!!!!!!!!!!!!!!!!");
+				Room room = roomVector.get(i);
+				for (int j = 0; j < room.getUserSocketRoom().size(); j++) {
+					UserSocket userSocket = room.getUserSocketRoom().elementAt(j);
+					userSocket.sendMessage(msg);
+				}
+			}
+		}
+	}
+
 	public void broadCast(String msg) {
+		// NewChatUser/ roomName @ nickName
 		StringTokenizer st = new StringTokenizer(msg, "/");
 		String pt = st.nextToken();
 

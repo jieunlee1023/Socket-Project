@@ -37,6 +37,13 @@ public class Room {
 		return roomName;
 	}
 
+	public void checkRoomUser(UserSocket userSocket) {
+		for (int i = 0; i < userSocketRoom.size(); i++) {
+			UserSocket socket = userSocketRoom.elementAt(i);
+			userSocket.sendMessage("OldChatUser/" + socket.getNickName());
+		}
+	}
+
 	public void removeRoom(UserSocket userSocket) {
 		userSocketRoom.remove(userSocket);
 
