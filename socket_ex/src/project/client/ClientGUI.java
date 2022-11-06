@@ -505,10 +505,9 @@ public class ClientGUI extends JFrame implements ActionListener {
 			chattingRoomTotalList.setListData(chattingList);
 
 		} else if (protocol.equals("OldChatUser")) {
-			if (message != client.getClientNickName()) {
 				chattingList.add(message);
 				chattingRoomTotalList.setListData(chattingList);
-			}
+				System.out.println("원래있던 채팅유저?"+message);
 		} else if (protocol.equals("Wisper")) {
 
 			System.out.println("귓말 들어옴! " + message);
@@ -583,7 +582,6 @@ public class ClientGUI extends JFrame implements ActionListener {
 			roomTotalList.setListData(roomList);
 		} else if (protocol.equals("ExitRoom")) {
 			myRoomName = null;
-			viewChat.append("[ " + myRoomName + " ] 에서 [ " + client.getClientNickName() + " ] 님이 퇴장했습니다.\n");
 		} else if (protocol.equals("DeleteRoom")) {
 			myRoomName = null;
 			chattingList.remove(message);

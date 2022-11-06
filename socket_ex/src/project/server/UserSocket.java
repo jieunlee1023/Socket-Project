@@ -148,7 +148,7 @@ public class UserSocket extends Thread {
 			for (int i = 0; i < mContext.server.getRoomVector().size(); i++) {
 				Room room = mContext.server.getRoomVector().elementAt(i);
 				if (room.getRoomName().equals(message)) {
-					room.roomBroadcast("Chatting/[알림]/ [ " + nickName + " ] 님이 입장 하였습니다. ");
+					//room.roomBroadcast("Chatting/[알림]/ [ " + nickName + " ] 님이 입장 하였습니다. ");
 					sendMessage("JoinRoom/" + message);
 
 					room.checkRoomUser(this);
@@ -183,7 +183,7 @@ public class UserSocket extends Thread {
 				System.out.println("Room out i:" + i);
 				Room room = mContext.server.getRoomVector().elementAt(i);
 				if (room.getRoomName().equals(message)) {
-					room.roomBroadcast("Chatting/[알림]/ [ " + nickName + " ] 님이 퇴장 하였습니다. ");
+					//room.roomBroadcast("Chatting/[알림]/ [ " + nickName + " ] 님이 퇴장 하였습니다. ");
 					room.exitRoom(this);
 					break;
 				}

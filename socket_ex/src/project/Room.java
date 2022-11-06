@@ -64,6 +64,8 @@ public class Room {
 			System.out.println("userSocektRoomVectorCount:" + i);
 			if (userSocketRoom.get(i).getNickName().equals(userSocket.getNickName())) {
 				userSocketRoom.remove(i);
+				System.out.println("zzzzzzzzzzzzzzzzzzzzzzzzzzz"+userSocket.getNickName());
+				userSocket.sendMessage("ExitRoom/"+userSocket.getNickName());
 			}
 			mContext.server.broadCast("UpdateExitUserData/ok");
 		}

@@ -86,6 +86,7 @@ public class Server {
 			String targetRoom = enterRoomName;
 			String targetName = enterNickName;
 
+
 			if (roomName.equals(targetRoom)) {
 				System.out.println("같은방 찾음!!!!!!!!!!!!!!!!!!!!!");
 				Room room = roomVector.get(i);
