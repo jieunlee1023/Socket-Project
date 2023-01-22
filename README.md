@@ -17,8 +17,7 @@
 
 
 ## ⚙️ 사용 기술 및 라이브러리
-
-- JAVA
+ <img src="https://img.shields.io/badge/JAVA-FF412F?style=flat&logo=Eclipse IDE&logoColor=white"/>
 
 ## 📽️ 구현 영상
 <div align=center>
